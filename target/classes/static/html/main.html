@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>宏鹏办公平台</title>
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios-0.18.0.js"></script>
+    <link rel="stylesheet" href="/element-ui/lib/theme-chalk/index.css"></link>
+    <script src="/element-ui/lib/index.js"></script>
+    <style>
+        .el-header {
+            background-color: #545c64;
+        }
+
+        .header-img {
+            height: 33px;
+            margin-top: 20px;
+            vertical-align: center;
+        }
+
+        .face {
+            margin-top: 5px;
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+        }
+        .el-dropdown-link {
+            cursor: pointer;
+            color: whitesmoke;
+            line-height: 60px;
+        }
+        .el-icon-arrow-down {
+            font-size: 12px;
+        }
+        .text{
+            float: right;
+        }
+        .avatar-uploader .el-upload {
+            border: 1px dashed #d9d9d9;
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        .avatar-uploader .el-upload:hover {
+            border-color: #409EFF;
+        }
+        .avatar-uploader-icon {
+            font-size: 28px;
+            color: #8c939d;
+            width: 78px;
+            height: 78px;
+            line-height: 78px;
+            text-align: center;
+        }
+        .avatar {
+            width: 78px;
+            height: 78px;
+            display: block;
+        }
+        aside#aside {
+            height: 680px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <el-container>
+            <!--头部区域-->
+            <el-header class="el-header" style="height: 60px">
+                <!--水平排列，根据el-container的特点，添加该组件-->
+                <el-container>
+                    <!--logo图片-->
+                    <div>
+                        <el-image src="/images/logo.png" class="header-img"></el-image>
+                        <div style="margin-top: 20px;float: left;float: right;color: white;font-family: 微软雅黑">宏鹏在线办公平台</div>
+                    </div>
+                    <!--顶部导航-->
+                    <el-dropdown style="margin-left: auto;padding-right: 20px">
+                         <span class="el-dropdown-link">
+                             <img src="images/logo.png" class="face"/>
+                             <div class="text">管理员：严敏<i class="el-icon-arrow-down el-icon--right"></i></div>
+                          </span>
+                        <el-dropdown-menu slot="dropdown">
+                            <el-dropdown-item @click.native="showEditUserView()">个人设置</el-dropdown-item>
+                            <el-dropdown-item divided @click.native="logout()">注销退出</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </el-dropdown>
+                </el-container>
+            </el-header>
+            <el-container style="height: 580px; border: 1px solid #eee">
+                <!--侧边栏区域-->
+                <el-aside width="200px" style="background-color: rgb(238, 241, 246)" id="aside">
+                    <el-menu :default-openeds="['1','2','3']" background-color="#545c64"
+                             text-color="#fff"
+                             active-text-color="#ffd04b">
+                        <el-submenu index="1">
+                            <template slot="title"><i class="el-icon-menu"></i>工作台</template>
+                            <el-menu-item-group>
+                                <el-menu-item index="1-1" @click="toHtml('userList.html')">
+                                    <i class="el-icon-help"></i>我的请假
+                                </el-menu-item>
+                                <el-menu-item index="1-2"  @click="toHtml('addUser.html')">
+                                    <i class="el-icon-help"></i>我的代办
+                                </el-menu-item>
+                                <el-submenu index="1-3">
+                                    <template slot="title"><i class="el-icon-menu"></i>流程管理</template>
+                                    <el-menu-item-group>
+                                        <el-menu-item index="1-1" @click="toHtml('userList.html')">
+                                            <i class="el-icon-help"></i>流程部署
+                                        </el-menu-item>
+                                        <el-menu-item index="1-1" @click="toHtml('userList.html')">
+                                            <i class="el-icon-help"></i>流程实例
+                                        </el-menu-item>
+                                    </el-menu-item-group>
+                                </el-submenu>
+
+                            </el-menu-item-group>
+                        </el-submenu>
+                        <el-submenu index="2">
+                            <template slot="title"><i class="el-icon-menu"></i>系统权限</template>
+                            <el-menu-item-group>
+                                <el-menu-item index="2-1" @click="toHtml('addPatient.html')">
+                                    <i class="el-icon-help"></i>用户管理
+                                </el-menu-item>
+                                <el-menu-item index="2-2" @click="toHtml('addRegistry.html')"><i class="el-icon-help"></i>角色管理
+                                </el-menu-item>
+                                <el-menu-item index="2-3" @click="toHtml('registryList.html')"><i class="el-icon-help"></i>菜单管理
+                                </el-menu-item>
+                            </el-menu-item-group>
+                        </el-submenu>
+                        <el-submenu index="3">
+                            <template slot="title"><i class="el-icon-menu"></i>基础设置</template>
+                            <el-menu-item-group>
+                                <el-menu-item index="3-1" @click="toHtml('diagnosticList.html')">
+                                    <i class="el-icon-help"></i>部门管理
+                                </el-menu-item>
+                                <el-menu-item index="3-1" @click="toHtml('diagnosticList.html')">
+                                    <i class="el-icon-help"></i>职位管理
+                                </el-menu-item>
+                                <el-menu-item index="3-1" @click="toHtml('diagnosticList.html')">
+                                    <i class="el-icon-help"></i>职位状态管理
+                                </el-menu-item>
+                            </el-menu-item-group>
+                        </el-submenu>
+                    </el-menu>
+                </el-aside>
+                <!--主区域-->
+                <el-container>
+                    <el-main>
+                        <iframe id="myframe" false="false" :src="iframeSrc" scrolling="none" frameborder="0"
+                                style="top:80px;left: 120px; width: 100%;height:600px"></iframe>
+                    </el-main>
+                </el-container>
+
+            </el-container>
+        </el-container>
+    </div>
+<script>
+    new Vue({
+        el:"#app",
+        data:{
+            iframeSrc: "/welcome"
+        },
+        methods:{
+            toHtml(html){
+                alert(html);
+            }
+        },
+        created(){
+
+        }
+    });
+</script>
+</body>
+</html>
