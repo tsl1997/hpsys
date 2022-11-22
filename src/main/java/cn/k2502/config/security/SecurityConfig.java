@@ -61,9 +61,12 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 					.loginPage("/index")
 					// 登录的逻辑操作由SpringSecurity完成
 					.loginProcessingUrl("/login")
-				// 配置登录的后处理器
-				.successHandler(hpSysAuthenticationSuccessHandler)
-				.failureHandler(hpSysAuthenticationFailedHandler)
+					// 配置登录的后处理器
+					.successHandler(hpSysAuthenticationSuccessHandler)
+					.failureHandler(hpSysAuthenticationFailedHandler)
+				.and()
+					.logout()
+					.logoutUrl("/logout")
 				.and()
 				// 放行登录相关网页资源
 				.authorizeRequests().antMatchers("/index","login").permitAll()

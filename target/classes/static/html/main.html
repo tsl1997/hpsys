@@ -90,7 +90,7 @@
                     <!--顶部导航-->
                     <el-dropdown style="margin-left: auto;padding-right: 20px">
                         <span class="el-dropdown-link">
-                            <img class="face" src="images/logo.png" />
+                            <img class="face" :src="userFrom.photo" />
                             <div class="text">管理员：{{userFrom.userName}}<i class="el-icon-arrow-down el-icon--right"></i>
                             </div>
                         </span>
@@ -183,7 +183,7 @@
                 </el-form-item>
                 <el-form-item label="用户图像" prop="photo">
                     <el-upload :before-upload="beforeAvatarUpload" :on-success="handleAvatarSuccess"
-                        :show-file-list="false" action="https://jsonplaceholder.typicode.com/posts/"
+                        :show-file-list="false" action="/pic/upload"
                         class="avatar-uploader" label="用户头像">
                         <img :src="userFrom.photo" class="avatar" v-if="userFrom.photo">
                         <i class="el-icon-plus avatar-uploader-icon" v-else></i>
@@ -242,7 +242,8 @@
                 },
                 // 头像上传后
                 handleAvatarSuccess(res, file) {
-                    this.imageUrl = URL.createObjectURL(file.raw);
+                    // alert(JSON.stringify(res));
+                    this.userFrom.photo = res.data;
                 },
                 // 提交表单
                 submitForm() {
@@ -253,12 +254,17 @@
                         return;
                     }
                     // 修改密码
-                    axios.get(`/account/updatePassword?newPassword=${this.userFrom.password}&repeatPassword=${this.userFrom.checkPass}`)
+                    axios.post(`/account/updatePassword`,{
+                        'newPassword':this.userFrom.password ,
+                        'repeatPassword':this.userFrom.checkPass,
+                        'photo':this.userFrom.photo
+                    })
                         .then((resp) => {
                             if (resp.data.code == 200) {
                                 // 成功
                                 this.$message.success('修改成功');
                                 // 重新登录
+                                this.logout();
                             } else { // 失败了
                                 this.$message.error(resp.data.message);
                             }
@@ -302,6 +308,10 @@
                         code:true,
                         msg:'验证合法'
                     }
+                },
+                // 退出
+                logout(){
+                    window.location.href = '/logout'
                 }
             },
             created() {
@@ -310,6 +320,14 @@
                     if (resp.data.code == 200) {  // 成功
                         // alert(resp.data.data.username);
                         this.userFrom.userName = resp.data.data.username;
+                        let photos = resp.data.data.photo;
+                        if(photos == null || photos == ''){
+                            // 如果数据库没有数据九使用默认图片
+                            this.userFrom.photo = '/images/logo.png'
+                        }else{
+                            // 如果有，九使用数据库的图片
+                            this.userFrom.photo = photos;
+                        }
                     } else {  // 失败
                         this.$message({
                             type: 'error',

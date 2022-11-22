@@ -1,12 +1,14 @@
 package cn.k2502.controller;
 
 
+import cn.k2502.dto.req.AccountParams;
 import cn.k2502.dto.resp.RespBean;
 import cn.k2502.pojo.Account;
 import cn.k2502.service.IAccountService;
 import cn.k2502.utils.SpringSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -39,10 +41,10 @@ public class AccountController {
 	private IAccountService accountService;
 
 	@RequestMapping("/updatePassword")
-	public RespBean updatePassword(String newPassword,String repeatPassword){
+	public RespBean updatePassword(@RequestBody AccountParams accountParams){
 		try {
 			// 修改密码
-			accountService.updatePassword(newPassword,repeatPassword);
+			accountService.updatePassword(accountParams);
 			return RespBean.success("修改成功");
 		} catch (Exception e) {
 			e.printStackTrace();
