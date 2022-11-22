@@ -20,4 +20,10 @@ public class IndexController {
 	public String main(){
 		return "main";
 	}
+
+
+	@GetMapping("/welcome")
+	public String welcome(){
+		return "welcome";
+	}
 }

@@ -20,4 +20,11 @@ public interface IAccountService extends IService<Account> {
 	 */
 	Account login(String username);
 
+	/**
+	 * 修改密码
+	 * @param newPassword		新密码
+	 * @param repeatPassword	重复密码
+	 */
+	void updatePassword(String newPassword,String repeatPassword);
+
 }
