@@ -10,7 +10,7 @@
     <script src="/js/axios-0.18.0.js"></script>
     <!-- 引入elementUI的css库 -->
     <link rel="stylesheet" href="/element-ui/lib/theme-chalk/index.css">
-    <!-- 引入elementui的核心js库 -->
+    <!-- 引入element ui的核心js库 -->
     <script src="/element-ui/lib/index.js"></script>
     <script src="/js/jquery-1.12.4.js"></script>
 
@@ -109,12 +109,16 @@
     function submitForm() {
         var userName = $("#userName").val();
         var password = $("#password").val();
+        var rememberMe = $("#rememberMe").is(":checked");
         // alert(userName + " " + password);
         // 执行登录请求
         $.ajax({
             url:'/login',
             type:'post',
-            data:{'userName':userName,'password':password},
+            data:{'userName':userName,
+            'password':password,
+            'rememberMe':rememberMe
+            },
             dataType:'json',
             success:function(result){
                 // alert(JSON.stringify(result));

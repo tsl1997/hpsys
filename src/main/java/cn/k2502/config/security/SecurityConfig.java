@@ -16,6 +16,11 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 /**
  * SpringSecurity的配置
@@ -43,6 +48,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	private HpSysAuthenticationSuccessHandler hpSysAuthenticationSuccessHandler;
 	@Autowired
 	private HpSysAuthenticationFailedHandler hpSysAuthenticationFailedHandler;
+	@Autowired
+	private  PersistentTokenRepository persistentTokenRepository;
 	/**
 	 * 配置表单的登录信息
 	 * @param http
@@ -64,6 +71,13 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 					// 配置登录的后处理器
 					.successHandler(hpSysAuthenticationSuccessHandler)
 					.failureHandler(hpSysAuthenticationFailedHandler)
+				.and()
+					.rememberMe()
+					.rememberMeParameter("rememberMe")
+					.rememberMeCookieName("remember-me-cookie")
+					// 设置token过期时间
+					.tokenValiditySeconds(7*24*60*60)
+					.tokenRepository(persistentTokenRepository)
 				.and()
 					.logout()
 					.logoutUrl("/logout")
@@ -109,4 +123,17 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(userDetailsService())
 				.passwordEncoder(encoder());
 	}
+
+	@Resource
+	private DataSource dataSource;
+
+	@Bean
+	public PersistentTokenRepository persistentTokenRepository(){
+		JdbcTokenRepositoryImpl jdbcTokenRepository = new JdbcTokenRepositoryImpl();
+		jdbcTokenRepository.setDataSource(dataSource);
+		jdbcTokenRepository.setCreateTableOnStartup(true);
+		return jdbcTokenRepository;
+	}
+
+
 }
