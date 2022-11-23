@@ -42,14 +42,18 @@ public class AccountController {
 
 	@RequestMapping("/updatePassword")
 	public RespBean updatePassword(@RequestBody AccountParams accountParams){
-		try {
+		// 定义全局统一异常管理 注释此处代码
+		/*try {
 			// 修改密码
 			accountService.updatePassword(accountParams);
 			return RespBean.success("修改成功");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RespBean.error(e.getMessage());
-		}
+		}*/
+
+		accountService.updatePassword(accountParams);
+		return RespBean.success("修改成功");
 	}
 
 }
