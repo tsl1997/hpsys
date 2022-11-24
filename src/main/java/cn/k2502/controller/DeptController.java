@@ -2,11 +2,10 @@ package cn.k2502.controller;
 
 
 import cn.k2502.dto.resp.RespBean;
+import cn.k2502.pojo.Dept;
 import cn.k2502.service.IDeptService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
@@ -26,6 +25,35 @@ public class DeptController {
 	@RequestMapping("/findDeptList")
 	public RespBean findDeptList() {
 		return deptService.getDeptList();
+	}
+
+	/**
+	 * 查询所有部门信息
+	 * @return 部门信息
+	 */
+	@RequestMapping("/findAll")
+	public RespBean findAll() {
+		return deptService.findAll();
+	}
+
+	/**
+	 * 查询部门名称是否存在
+	 * @param deptName 部门名称
+	 * @return True/False
+	 */
+	@GetMapping("/checkDeptName")
+	public RespBean checkDeptName(@RequestParam String deptName) {
+		return deptService.checkDeptName(deptName);
+	}
+
+	/**
+	 * 添加部门
+	 * @param dept 部门对象
+	 * @return
+	 */
+	@PostMapping("/save")
+	public RespBean save(@RequestBody Dept dept) {
+		return deptService.saveDept(dept);
 	}
 
 }

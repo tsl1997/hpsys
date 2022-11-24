@@ -10,6 +10,44 @@
 </head>
 <body>
     <div id="app">
+        <el-button type="primary" icon="el-icon-plus" @click="dialogVisible = true">增加节点</el-button>
+        <!-- 增加节点弹框  -->
+        <!--  提交表单-->
+        <el-dialog :before-close="handleClose" :visible.sync="dialogVisible" title="编辑个人信息" width="30%">
+            <el-form :model="deptForm" :rules="rules" class="demo-ruleForm" label-width="100px" ref="deptForm">
+                <el-form-item label="上级部门" prop="parentId">
+                    <el-select v-model="deptForm.parentId" filterable placeholder="请选择上级部门">
+                        <el-option
+                                v-for="item in depts"
+                                :key="item.id"
+                                :label="item.deptName"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="部门名称" prop="deptName">
+                    <el-input v-model="deptForm.deptName"></el-input>
+                </el-form-item>
+                <el-form-item label="部门编号" prop="deptNum">
+                    <el-input v-model="deptForm.deptNum"></el-input>
+                </el-form-item>
+                <el-form-item label="部门经理" prop="managerId">
+                    <el-select v-model="deptForm.managerId" filterable placeholder="请选择部门经理">
+                        <el-option
+                                v-for="item in employees"
+                                :key="item.id"
+                                :label="item.empName"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitForm('deptForm')">立即创建</el-button>
+                </el-form-item>
+            </el-form>
+        </el-dialog>
+
+        <!--  部门信息树图 -->
         <el-tree
                 :data="deptNodes"
                 :props="defaultProps"
@@ -21,15 +59,36 @@
         </el-tree>
     </div>
     <script>
-        var vue = new Vue({
+        var app = new Vue({
             el:"#app",
             data:{
                 deptNodes: [],
                 defaultProps: {
                     children: 'children',
                     label: 'deptName'
+                },
+                // 增加节点的判断字符
+                dialogVisible: false,
+                // 添加部门表单数据
+                deptForm: {
+                    parentId: -1,
+                    deptName: '',
+                    deptNum: '',
+                    managerId: 1
+                },
+                depts:[], // 所有的部门信息
+                employees:[],// 所有的员工
+                isDeptName: false,// 默认部门名称在数据库中不存在
+                // 表单校验
+                rules: {
+                    deptName: [
+                        {required: true, message: '请输入部门名称', trigger: 'blur'},
+                        // {validator: deptNameValidate,trigger: 'blur'}
+                    ],
+                    deptNum: [
+                        {required: true, message: '请输入部门编号', trigger: 'blur'}
+                    ],
                 }
-
             },
             methods:{
                 getTree(){ // 查询部门信息
@@ -41,6 +100,41 @@
                         }
                     })
                 },
+                getDeptAll(){ // 查询部门
+                    axios.get('/dept/findAll').then((resp) => {
+                        if(resp.data.code===200){
+                            this.depts = resp.data.data;
+                        }else{
+                            this.$message.error(resp.data.message)
+                        }
+                    })
+                },
+                getEmployees(){ // 查询员工
+                    axios.get('/employee/findAll').then((resp) => {
+                        if(resp.data.code===200){
+                            this.employees = resp.data.data;
+                        }else{
+                            this.$message.error(resp.data.message)
+                        }
+                    })
+                },
+                checkDeptName(){ // 查询部门名称是否在数据库中已经存在
+                    axios.get('/dept/checkDeptName?deptName='+this.deptForm.deptName).then((resp) => {
+                        if(resp.data.code===200){
+                            this.isDeptName = resp.data.data;
+                        }else{
+                            this.$message.error(resp.data.message)
+                        }
+                    })
+                },
+                deptNameValidate(){ // 提交前的验证
+                    this.checkDeptName();
+                    if(this.isDeptName){ // 表示数据库中部门名称已经存在
+                        this.$message.error("部门名称已经存在，不能添加");
+                        return false;
+                    }
+                    return true;
+                },
                 treeAdd(node,data,store){ //树状图的增加
 
                 },
@@ -49,6 +143,27 @@
                 },
                 treeDelete(node,data,store){ //删除树状图
 
+                },
+                submitForm(formName) { // 添加部门
+                    if(!this.deptNameValidate()){ // 验证部门
+                        return;
+                    }
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            axios.post('/dept/save',this.deptForm).then((resp) => {
+                                if(resp.data.code===200){
+                                    this.$message.success(resp.data.message);
+                                    this.getTree();
+                                    this.dialogVisible = false; // 隐藏窗口
+                                }else{
+                                    this.$message.error(resp.data.message);
+                                }
+                            })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
                 },
 
                 renderContent(createEelement, { node, data, store }) {
@@ -136,9 +251,11 @@
                     )
                 }
             },
-            created(){
+            created(){ // 实例创建完成
                 this.getTree();
-            }
+                this.getDeptAll();
+                this.getEmployees();
+            },
         });
     </script>
 </body>

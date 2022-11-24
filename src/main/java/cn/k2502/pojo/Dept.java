@@ -9,6 +9,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 /**
@@ -24,6 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 @TableName("t_dept")
 @ApiModel(value="Dept对象", description="")
+@NoArgsConstructor
 public class Dept implements Serializable {
 
     private static final long serialVersionUID=1L;
