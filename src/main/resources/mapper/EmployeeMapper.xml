@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.k2502.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.k2502.pojo.Employee">
+        <id column="id" property="id" />
+        <result column="emp_num" property="empNum" />
+        <result column="emp_name" property="empName" />
+        <result column="gender" property="gender" />
+        <result column="birthday" property="birthday" />
+        <result column="location" property="location" />
+        <result column="on_board_date" property="onBoardDate" />
+        <result column="mobile" property="mobile" />
+        <result column="qq" property="qq" />
+        <result column="email" property="email" />
+        <result column="weixin" property="weixin" />
+        <result column="dept_id" property="deptId" />
+        <result column="title_category_id" property="titleCategoryId" />
+        <result column="title_id" property="titleId" />
+        <result column="employ_status_id" property="employStatusId" />
+        <result column="graduate_school" property="graduateSchool" />
+        <result column="education" property="education" />
+        <result column="formal_status" property="formalStatus" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, emp_num, emp_name, gender, birthday, location, on_board_date, mobile, qq, email, weixin, dept_id, title_category_id, title_id, employ_status_id, graduate_school, education, formal_status
+    </sql>
+
+</mapper>

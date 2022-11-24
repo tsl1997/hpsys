@@ -97,5 +97,5 @@ public class CodeGen {
 		mpg.execute();
 	}
 	// 表名  多表用,分割开来
-	public static String table = "t_account";
+	public static String table = "t_dept,t_employee";
 }

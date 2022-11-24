@@ -26,4 +26,9 @@ public class IndexController {
 	public String welcome(){
 		return "welcome";
 	}
+
+	@GetMapping("/dept")
+	public String dept(){
+		return "dept";
+	}
 }

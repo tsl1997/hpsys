@@ -146,7 +146,7 @@
                         <el-submenu index="3">
                             <template slot="title"><i class="el-icon-menu"></i>基础设置</template>
                             <el-menu-item-group>
-                                <el-menu-item @click="toHtml('diagnosticList.html')" index="3-1">
+                                <el-menu-item @click="toHtml('/dept')" index="3-1">
                                     <i class="el-icon-help"></i>部门管理
                                 </el-menu-item>
                                 <el-menu-item @click="toHtml('diagnosticList.html')" index="3-1">
@@ -221,7 +221,7 @@
             },
             methods: {
                 toHtml(html) {
-                    alert(html);
+                    this.iframeSrc = html;
                 },
                 // 个人设置
                 showEditUserView() {

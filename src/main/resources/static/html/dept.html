@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>部门管理</title>
+    <script src="/js/vue.js"></script>
+    <script src="/js/axios-0.18.0.js"></script>
+    <link rel="stylesheet" href="/element-ui/lib/theme-chalk/index.css"></link>
+    <script src="/element-ui/lib/index.js"></script>
+</head>
+<body>
+    <div id="app">
+        <el-tree
+                :data="deptNodes"
+                :props="defaultProps"
+                show-checkbox
+                node-key="id"
+                default-expand-all
+                :expand-on-click-node="false"
+                :render-content="renderContent">
+        </el-tree>
+    </div>
+    <script>
+        var vue = new Vue({
+            el:"#app",
+            data:{
+                deptNodes: [],
+                defaultProps: {
+                    children: 'children',
+                    label: 'deptName'
+                }
+
+            },
+            methods:{
+                getTree(){ // 查询部门信息
+                    axios.get('/dept/findDeptList').then((resp)=>{
+                        if(resp.data.code===200){
+                            this.deptNodes = resp.data.data;
+                        }else{
+                            this.$message.error(resp.data.message)
+                        }
+                    })
+                },
+                treeAdd(node,data,store){ //树状图的增加
+
+                },
+                treeUpdate(node,data,store){ //修改树状图
+
+                },
+                treeDelete(node,data,store){ //删除树状图
+
+                },
+
+                renderContent(createEelement, { node, data, store }) {
+                    return createEelement(
+                        'span',
+                        {
+                            style:{
+                                'flex':'1',
+                                'display':'flex',
+                                'align-items':'center',
+                                'justify-content':'space-between',
+                                'font-size':'14px',
+                                'padding-right':'8px'
+                            }
+                        },
+                        [
+                            createEelement(
+                                'span',
+                                {},
+                                [
+                                    createEelement('span',node.label)
+                                ]
+                            ),
+                            createEelement(
+                                'span',
+                                {},
+                                [
+                                    createEelement('el-button',
+                                        {
+                                            style:{
+                                                'font-size':'12px'
+                                            },
+                                            attrs:{
+                                                'type':'text'
+                                            },
+                                            on:{
+                                                click:function (){
+                                                    vue.treeAdd(node,data,store);
+                                                }
+                                            },
+                                            domProps:{
+                                                innerHTML:'增加'
+                                            }
+                                        }
+                                    ),
+                                    createEelement('el-button',
+                                        {
+                                            style:{
+                                                'font-size':'12px'
+                                            },
+                                            attrs:{
+                                                'type':'text'
+                                            },
+                                            on:{
+                                                click:function (){
+                                                    vue.treeUpate(node,data,store);
+                                                }
+                                            },
+                                            domProps:{
+                                                innerHTML:'修改'
+                                            }
+                                        }
+                                    ),
+                                    createEelement('el-button',
+                                        {
+                                            style:{
+                                                'font-size':'12px'
+                                            },
+                                            attrs:{
+                                                'type':'text'
+                                            },
+                                            on:{
+                                                click:function (){
+                                                    vue.treeDelete(node,data,store);
+                                                }
+                                            },
+                                            domProps:{
+                                                innerHTML:'删除'
+                                            }
+                                        }
+                                    )
+                                ]
+                            )
+                        ]
+                    )
+                }
+            },
+            created(){
+                this.getTree();
+            }
+        });
+    </script>
+</body>
+</html>

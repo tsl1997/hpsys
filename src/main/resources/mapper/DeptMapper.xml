@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.k2502.mapper.DeptMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.k2502.pojo.Dept">
+        <id column="id" property="id" />
+        <result column="dept_num" property="deptNum" />
+        <result column="dept_name" property="deptName" />
+        <result column="parent_id" property="parentId" />
+        <result column="level" property="level" />
+        <result column="manager_id" property="managerId" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, dept_num, dept_name, parent_id, level, manager_id, create_time, update_time, status
+    </sql>
+
+    <resultMap id="deptMap" type="cn.k2502.dto.resp.DeptNode">
+        <id property="id" column="one_id"/>
+        <result property="deptName" column="one_name"/>
+        <!-- 一对多关系映射 -->
+        <collection property="children" ofType="cn.k2502.dto.resp.DeptNode">
+            <id property="id" column="two_id"/>
+            <result property="deptName" column="two_name"/>
+            <collection property="children" ofType="cn.k2502.dto.resp.DeptNode">
+                <id property="id" column="three_id"/>
+                <result property="deptName" column="three_name"/>
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getDeptNodes" resultMap="deptMap" >
+        SELECT
+            d1.`id` one_id,
+            d1.`dept_name` one_name,
+            d2.`id` two_id,
+            d2.`dept_name` two_name,
+            d3.`id` three_id,
+            d3.`dept_name` three_name
+        FROM `t_dept` d1
+                 LEFT JOIN `t_dept` d2
+                           ON d1.`id` = d2.`parent_id`
+                 LEFT JOIN `t_dept` d3
+                           ON d2.`id` = d3.`parent_id`
+        WHERE d1.`status` = 1
+          AND d1.`parent_id` = 0
+    </select>
+
+</mapper>
