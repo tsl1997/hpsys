@@ -59,7 +59,7 @@
         </el-tree>
     </div>
     <script>
-        var app = new Vue({
+        var vue = new Vue({
             el:"#app",
             data:{
                 deptNodes: [],
@@ -71,7 +71,8 @@
                 dialogVisible: false,
                 // 添加部门表单数据
                 deptForm: {
-                    parentId: -1,
+                    id:null,
+                    parentId: 0,
                     deptName: '',
                     deptNum: '',
                     managerId: 1
@@ -130,27 +131,40 @@
                 deptNameValidate(){ // 提交前的验证
                     this.checkDeptName();
                     if(this.isDeptName){ // 表示数据库中部门名称已经存在
-                        this.$message.error("部门名称已经存在，不能添加");
+                        this.$message.error("部门名称已经存在！！！");
                         return false;
                     }
                     return true;
                 },
                 treeAdd(node,data,store){ //树状图的增加
-
+                     // alert(JSON.stringify(data));
+                    this.deptForm.parentId = data.parentId;
+                    this.deptForm.id = null;
+                    this.dialogVisible = true;
                 },
                 treeUpdate(node,data,store){ //修改树状图
-
+                    // alert(JSON.stringify(data));
+                    this.deptForm.id = data.id;
+                    this.deptForm.parentId = data.parentId;
+                    this.deptForm.managerId = data.managerId;
+                    this.deptForm.deptName = data.deptName;
+                    this.deptForm.deptNum = data.deptNum;
+                    this.dialogVisible = true;
                 },
                 treeDelete(node,data,store){ //删除树状图
 
                 },
-                submitForm(formName) { // 添加部门
+                submitForm(formName) { // 添加、修改部门
                     if(!this.deptNameValidate()){ // 验证部门
                         return;
                     }
+                    let url = '/dept/save'; // 默认路径是添加
+                    if(this.deptForm.id != null){ //表示修改
+                        url = '/dept/update'; // 修改提交路径
+                    }
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            axios.post('/dept/save',this.deptForm).then((resp) => {
+                            axios.post(url,this.deptForm).then((resp) => {
                                 if(resp.data.code===200){
                                     this.$message.success(resp.data.message);
                                     this.getTree();
@@ -220,7 +234,7 @@
                                             },
                                             on:{
                                                 click:function (){
-                                                    vue.treeUpate(node,data,store);
+                                                    vue.treeUpdate(node,data,store);
                                                 }
                                             },
                                             domProps:{

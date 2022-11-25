@@ -36,4 +36,11 @@ public interface IDeptService extends IService<Dept> {
 	 */
 	RespBean saveDept(Dept dept);
 
+	/**
+	 *  修改部门
+	 * @param dept 部门对象
+	 * @return
+	 */
+	RespBean updateDept(Dept dept);
+
 }

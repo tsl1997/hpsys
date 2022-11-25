@@ -1,5 +1,6 @@
 package cn.k2502.dto.resp;
 
+import cn.k2502.pojo.Dept;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +14,6 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeptNode {
-	private Integer id;
-	private String deptName;
+public class DeptNode extends Dept {
 	private List<DeptNode> children;
 }

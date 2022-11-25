@@ -23,13 +23,22 @@
     <resultMap id="deptMap" type="cn.k2502.dto.resp.DeptNode">
         <id property="id" column="one_id"/>
         <result property="deptName" column="one_name"/>
+        <result property="deptNum" column="one_num"/>
+        <result property="managerId" column="one_manager_id"/>
+        <result property="parentId" column="one_parent_id"/>
         <!-- 一对多关系映射 -->
         <collection property="children" ofType="cn.k2502.dto.resp.DeptNode">
             <id property="id" column="two_id"/>
             <result property="deptName" column="two_name"/>
+            <result property="deptNum" column="two_num"/>
+            <result property="managerId" column="two_manager_id"/>
+            <result property="parentId" column="two_parent_id"/>
             <collection property="children" ofType="cn.k2502.dto.resp.DeptNode">
                 <id property="id" column="three_id"/>
                 <result property="deptName" column="three_name"/>
+                <result property="deptNum" column="three_num"/>
+                <result property="managerId" column="three_manager_id"/>
+                <result property="parentId" column="three_parent_id"/>
             </collection>
         </collection>
     </resultMap>
@@ -38,10 +47,19 @@
         SELECT
             d1.`id` one_id,
             d1.`dept_name` one_name,
+            d1.`dept_num` one_num,
+            d1.`manager_id` one_manager_id,
+            d1.`parent_id` one_parent_id,
             d2.`id` two_id,
             d2.`dept_name` two_name,
+            d2.`dept_num` two_num,
+            d2.`manager_id` two_manager_id,
+            d2.`parent_id` two_parent_id,
             d3.`id` three_id,
-            d3.`dept_name` three_name
+            d3.`dept_name` three_name,
+            d3.`dept_num` three_num,
+            d3.`manager_id` three_manager_id,
+            d3.`parent_id` three_parent_id
         FROM `t_dept` d1
                  LEFT JOIN `t_dept` d2
                            ON d1.`id` = d2.`parent_id`

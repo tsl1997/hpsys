@@ -56,5 +56,15 @@ public class DeptController {
 		return deptService.saveDept(dept);
 	}
 
+	/**
+	 * 修改部门信息 （根据部门id）
+	 * @param dept 部门对象
+	 * @return 成功/失败
+	 */
+	@PostMapping("/update")
+	public RespBean updateDept(@RequestBody Dept dept) {
+		return deptService.updateDept(dept);
+	}
+
 }
 
