@@ -154,6 +154,7 @@
                                 if(resp.data.code===200){
                                     this.$message.success(resp.data.message);
                                     this.getTree();
+                                    this.getDeptAll();
                                     this.dialogVisible = false; // 隐藏窗口
                                 }else{
                                     this.$message.error(resp.data.message);
