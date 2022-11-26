@@ -43,4 +43,11 @@ public interface IDeptService extends IService<Dept> {
 	 */
 	RespBean updateDept(Dept dept);
 
+	/**
+	 * 删除部门
+	 * @param id 部门id
+	 * @return 结果
+	 */
+	RespBean deleteDept(Integer id);
+
 }

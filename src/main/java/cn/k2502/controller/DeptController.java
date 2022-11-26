@@ -66,5 +66,15 @@ public class DeptController {
 		return deptService.updateDept(dept);
 	}
 
+	/**
+	 * 删除部门 及其下属部门
+	 * @param id 删除部门的id
+	 * @return 成功/失败
+	 */
+	@GetMapping("/delete")
+	public RespBean delete(@RequestParam Integer id) {
+		return deptService.deleteDept(id);
+	}
+
 }
 

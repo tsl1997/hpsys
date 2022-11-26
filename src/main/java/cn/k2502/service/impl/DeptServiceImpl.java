@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +55,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 		}
 	}
 
+
 	@Override
 	public RespBean checkDeptName(String deptName) {
 		try {
@@ -70,6 +73,16 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 	@Override
 	public RespBean saveDept(Dept dept) {
 		try {
+			Integer parentId = dept.getParentId();
+			if(parentId == 0){
+				dept.setLevel(1);
+			}else{
+				Dept parentDept = this.baseMapper.selectById(parentId);
+				if(parentDept.getLevel() == 3){
+					return RespBean.error("不能继续往三级分类下添加分类");
+				}
+				dept.setLevel(parentDept.getLevel()+1);
+			}
 			this.baseMapper.insert(dept);
 			return RespBean.success("添加部门成功");
 		} catch (Exception e) {
@@ -91,6 +104,36 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, Dept> implements ID
 		} catch (Exception e) {
 			e.printStackTrace();
 			return RespBean.error("修改部门失败");
+		}
+	}
+
+	@Override
+	public RespBean deleteDept(Integer id) {
+		try {
+			// 创建一个集合，用来存储要删除的id
+			ArrayList<Integer> ids = new ArrayList<>();
+			ids.add(id);
+			// 查询要删除的id将id放入集合中
+			this.getDeleteIds(ids,id);
+			// 删除
+			this.baseMapper.deleteBatchIds(ids);
+			return RespBean.success("删除成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RespBean.error("删除失败");
+		}
+	}
+
+	private void getDeleteIds(ArrayList<Integer> ids, Integer id) {
+		// 查询二级分类
+		List<Dept> twoList = this.baseMapper.selectList(new QueryWrapper<Dept>().eq("parent_id", id));
+		// 遍历二级分类，将二级分类的id作为父id
+		for (Dept dept : twoList) {
+			Integer twoId = dept.getId();
+			// 放入刀集合中
+			ids.add(twoId);
+			// 把二级分类的每个id，查询下以及分类
+			this.getDeleteIds(ids,twoId);
 		}
 	}
 }
