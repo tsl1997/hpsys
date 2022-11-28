@@ -1,7 +1,11 @@
 package cn.k2502.mapper;
 
+import cn.k2502.dto.req.EmployeeQuery;
 import cn.k2502.pojo.Employee;
+import cn.k2502.vo.EmployeeVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -12,5 +16,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2022-11-23
  */
 public interface EmployeeMapper extends BaseMapper<Employee> {
+	/**
+	 * 用户信息查询
+	 * @param employeeQuery 擦护心条件
+	 * @return 用户列表
+	 */
+	List<EmployeeVO> getEmployeesList(EmployeeQuery employeeQuery);
 
 }

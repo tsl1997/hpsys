@@ -28,5 +28,31 @@
     <sql id="Base_Column_List">
         id, emp_num, emp_name, gender, birthday, location, on_board_date, mobile, qq, email, weixin, dept_id, title_category_id, title_id, employ_status_id, graduate_school, education, formal_status
     </sql>
+    
+    <select id="getEmployeesList" resultType="cn.k2502.vo.EmployeeVO" parameterType="cn.k2502.dto.req.EmployeeQuery">
+        SELECT
+            e.*,
+            a.`user_name`,
+            d.`dept_num`,
+            d.`dept_name`,
+            c.title_name,
+            s.name AS emp_status
+        FROM `t_employee` e
+                 LEFT JOIN `t_account` a ON e.`id`=a.`emp_id`
+                 LEFT JOIN `t_dept` d ON e.`dept_id`=d.`id`
+                 LEFT JOIN `t_title_category` c ON e.`title_id` = c.`id`
+                 LEFT JOIN `t_employee_status` s ON e.`employ_status_id`=s.`id`
+        <where>
+        <if test="null != empName and empName != ''">
+            e.`emp_name` LIKE concat('%',#{empName},'%')
+        </if>
+        <if test="null != deptId">
+            AND e.`dept_id`=#{deptId}
+        </if>
+        <if test="null != empNum">
+            AND e.`emp_num`=#{empNum}
+        </if>
+        </where>
+    </select>
 
 </mapper>
