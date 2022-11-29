@@ -4,6 +4,8 @@ import cn.k2502.dto.req.EmployeeQuery;
 import cn.k2502.pojo.Employee;
 import cn.k2502.vo.EmployeeVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,6 +23,6 @@ public interface EmployeeMapper extends BaseMapper<Employee> {
 	 * @param employeeQuery 擦护心条件
 	 * @return 用户列表
 	 */
-	List<EmployeeVO> getEmployeesList(EmployeeQuery employeeQuery);
+	IPage<EmployeeVO> getEmployeesList(IPage page,@Param("employeeQuery") EmployeeQuery employeeQuery);
 
 }

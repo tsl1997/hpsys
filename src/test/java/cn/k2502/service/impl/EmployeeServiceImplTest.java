@@ -23,6 +23,8 @@ public class EmployeeServiceImplTest {
 	@Test
 	public void testSelect(){
 		EmployeeQuery employeeQuery = new EmployeeQuery();
+		employeeQuery.setPage(1);
+		employeeQuery.setLimit(2);
 		Map<String, Object> map = employeeService.employeeList(employeeQuery);
 		System.out.println(map);
 	}

@@ -31,4 +31,9 @@ public class IndexController {
 	public String dept(){
 		return "dept";
 	}
+
+	@GetMapping("/employee")
+	public String employee(){
+		return "employee";
+	}
 }

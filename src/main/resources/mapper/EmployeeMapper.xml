@@ -29,7 +29,7 @@
         id, emp_num, emp_name, gender, birthday, location, on_board_date, mobile, qq, email, weixin, dept_id, title_category_id, title_id, employ_status_id, graduate_school, education, formal_status
     </sql>
     
-    <select id="getEmployeesList" resultType="cn.k2502.vo.EmployeeVO" parameterType="cn.k2502.dto.req.EmployeeQuery">
+    <select id="getEmployeesList" resultType="cn.k2502.vo.EmployeeVO" >
         SELECT
             e.*,
             a.`user_name`,
@@ -43,14 +43,14 @@
                  LEFT JOIN `t_title_category` c ON e.`title_id` = c.`id`
                  LEFT JOIN `t_employee_status` s ON e.`employ_status_id`=s.`id`
         <where>
-        <if test="null != empName and empName != ''">
-            e.`emp_name` LIKE concat('%',#{empName},'%')
+        <if test="null != employeeQuery.empName and employeeQuery.empName != ''">
+            e.`emp_name` LIKE concat('%',#{employeeQuery.empName},'%')
         </if>
-        <if test="null != deptId">
-            AND e.`dept_id`=#{deptId}
+        <if test="null != employeeQuery.deptId">
+            AND e.`dept_id`=#{employeeQuery.deptId}
         </if>
-        <if test="null != empNum">
-            AND e.`emp_num`=#{empNum}
+        <if test="null != employeeQuery.empNum">
+            AND e.`emp_num`=#{employeeQuery.empNum}
         </if>
         </where>
     </select>

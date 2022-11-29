@@ -1,13 +1,13 @@
 package cn.k2502.controller;
 
 
+import cn.k2502.dto.req.EmployeeQuery;
 import cn.k2502.dto.resp.RespBean;
 import cn.k2502.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 /**
  * <p>
@@ -33,5 +33,14 @@ public class EmployeeController {
 		return employeeService.findAll();
 	}
 
+	/**
+	 * 员工信息查询
+	 * @param employeeQuery 擦护心条件类
+	 * @return 员工集合
+	 */
+	@PostMapping("/list")
+	public Map<String,Object> employeeList(@RequestBody EmployeeQuery employeeQuery) {
+		return  employeeService.employeeList(employeeQuery);
+	}
 }
 

@@ -7,6 +7,8 @@ import cn.k2502.mapper.EmployeeMapper;
 import cn.k2502.service.IEmployeeService;
 import cn.k2502.vo.EmployeeVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -47,9 +49,11 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 	 */
 	@Override
 	public Map<String, Object> employeeList(EmployeeQuery employeeQuery) {
+		IPage<EmployeeVO> page = new Page<>(employeeQuery.getPage(), employeeQuery.getLimit());
 		HashMap<String, Object> map = new HashMap<>();
-		List<EmployeeVO> list = this.baseMapper.getEmployeesList(employeeQuery);
-		map.put("list",list);
+		page = this.baseMapper.getEmployeesList(page, employeeQuery);
+		map.put("total",page.getTotal()); // 总的信息条数
+		map.put("list",page.getRecords()); // 一页数据
 		return map;
 	}
 }

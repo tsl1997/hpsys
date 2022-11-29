@@ -42,13 +42,13 @@
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.1</version>
         </dependency>
         <!-- MyBatisPlus逆向工程插件 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.3.0</version>
+            <version>3.4.1</version>
         </dependency>
         <!-- mysql驱动 -->
         <dependency>
