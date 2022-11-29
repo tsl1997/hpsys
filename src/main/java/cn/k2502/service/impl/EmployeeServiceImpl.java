@@ -56,4 +56,16 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 		map.put("list",page.getRecords()); // 一页数据
 		return map;
 	}
+
+	@Override
+	public RespBean addEmployee(Employee employee) {
+		try {
+			employee.setFormalStatus("0"); // 未转正
+			this.baseMapper.insert(employee);
+			return RespBean.success("添加员工成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RespBean.error("添加员工失败");
+		}
+	}
 }

@@ -3,6 +3,7 @@ package cn.k2502.controller;
 
 import cn.k2502.dto.req.EmployeeQuery;
 import cn.k2502.dto.resp.RespBean;
+import cn.k2502.pojo.Employee;
 import cn.k2502.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +42,16 @@ public class EmployeeController {
 	@PostMapping("/list")
 	public Map<String,Object> employeeList(@RequestBody EmployeeQuery employeeQuery) {
 		return  employeeService.employeeList(employeeQuery);
+	}
+
+	/**
+	 * 添加员工
+	 * @param employee 员工信息
+	 * @return 添加结果
+	 */
+	@PostMapping("/add")
+	public RespBean add(@RequestBody Employee employee){
+		return employeeService.addEmployee(employee);
 	}
 }
 

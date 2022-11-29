@@ -28,4 +28,11 @@ public interface IEmployeeService extends IService<Employee> {
 	 * @return 用户列表
 	 */
 	Map<String,Object> employeeList(EmployeeQuery employeeQuery);
+
+	/**
+	 * 添加员工
+	 * @param employee 员工信息
+	 * @return 添加结果
+	 */
+	RespBean addEmployee(Employee employee);
 }

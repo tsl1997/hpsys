@@ -6,11 +6,14 @@ import java.time.LocalDate;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
+import java.util.Date;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * <p>
@@ -43,13 +46,15 @@ public class Employee implements Serializable {
     private String gender;
 
     @ApiModelProperty(value = "出生日期")
-    private LocalDate birthday;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date birthday;
 
     @ApiModelProperty(value = "工作地点")
     private String location;
 
     @ApiModelProperty(value = "入职时间")
-    private LocalDateTime onBoardDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date onBoardDate;
 
     @ApiModelProperty(value = "手机号")
     private String mobile;

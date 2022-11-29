@@ -88,10 +88,44 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
-
+                <!-- 同上调用函数查询结果显示 -->
+                <el-form-item label="职位" prop="titleCategoryId">
+                    <el-select v-model="empForm.titleCategoryId" filterable placeholder="请选择职位">
+                        <el-option
+                                v-for="item in titleCategories"
+                                :key="item.id"
+                                :label="item.titleName"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="职位状态" prop="employStatusId">
+                    <el-select v-model="empForm.employStatusId" filterable placeholder="请选择职位状态">
+                        <el-option
+                                v-for="item in employeeStatus"
+                                :key="item.id"
+                                :label="item.name"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+                <!-- 查询选择结束 下面是正常的选项 -->
+                <el-form-item label="毕业院校" prop="graduateSchool">
+                    <el-input v-model="empForm.graduateSchool"></el-input>
+                </el-form-item>
+                <el-form-item label="学历" prop="education">
+                    <el-select v-model="empForm.education" filterable placeholder="请选择职位状态">
+                        <el-option
+                                v-for="item in xl"
+                                :key="item.id"
+                                :label="item.id"
+                                :value="item.id">
+                        </el-option>
+                    </el-select>
+                </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="submitForm('empForm')">立即创建</el-button>
-                    <el-button @click="resetForm('ruleForm')">重置</el-button>
+                    <el-button @click="resetForm('empForm')">重置</el-button>
                 </el-form-item>
             </el-form>
         </el-dialog>
@@ -102,6 +136,8 @@
             data:{
                 employees:[],//员工
                 depts:[],// 部门
+                titleCategories: [],// 职位
+                employeeStatus:[],// 职位状态
                 employeeQuery:{ // 查询条件
                     page: 1,
                     limit: 2
@@ -117,17 +153,46 @@
                     qq: '',
                     weixin: '',
                     email: '',
-                    deptId: ''
+                    deptId: '',
+                    titleCategoryId: '',
+                    employStatusId: '',
+                    graduateSchool: '',
+                    education: '',
                 },
+                xl:[{id:'高中'},
+                    {id:'大专'},
+                    {id:'本科'},
+                    {id:'硕士'},
+                    {id:'博士'}
+                ],// 学历
+                rules: { // 表单验证
+                    empName: [
+                        {required: true, message: '请输入员工的姓名', trigger: 'blur'}
+                    ],
+                    birthday: [
+                        {required: true, message: '请选择员工的生日', trigger: 'blur'}
+                    ],
+                    onBoardDate: [
+                        {required: true, message: '请选择员工的入职时间', trigger: 'blur'}
+                    ],
+                    mobile: [
+                        {required: true, message: '请输入员工的手机号', trigger: 'blur'}
+                    ],
+                    deptId: [
+                        {required: true, message: '请选择员工的部门', trigger: 'blur'}
+                    ],
+                    titleCategoryId: [
+                        {required: true, message: '请选择员工的职位', trigger: 'blur'}
+                    ],
+                    employStatusId: [
+                        {required: true, message: '请选择员工的职位状态', trigger: 'blur'}
+                    ],
+                    education: [
+                        {required: true, message: '请选择员工的学历', trigger: 'blur'}
+                    ],
+                }
             },
             methods: {
-                search(){ // 搜索员工信息
-                    axios.post('/employee/list',this.employeeQuery).then((resp)=>{
-                        this.total = resp.data.total;
-                        this.employees = resp.data.list;
-                        // console.log(JSON.stringify(resp.data));
-                    })
-                },
                 formateDate(row,column){ // 日期格式转化，前端版
                     // 获取单元格中的数据
                     let date = row[column.property]
@@ -141,11 +206,59 @@
                 toAdd(){ // 点击添加按钮
                     this.dialogVisible = true;
                     this.findDept();
+                    this.findTitleCategory();
+                    this.employeeStatu();
+                },
+                submitForm(formName) { // 表单提交的函数
+                    this.$refs[formName].validate((valid) => {
+                        if (valid) {
+                            axios.post('/employee/add',this.empForm).then((resp)=>{
+                                if(resp.data.code === 200){
+                                    // 1：重新查询 2：情况内容 3：关闭对话框
+                                    this.search();
+                                    this.resetForm('empForm');
+                                    this.dialogVisible = false;
+                                }
+                            })
+                        } else {
+                            console.log('error submit!!');
+                            return false;
+                        }
+                    });
+                },
+                resetForm(formName) { // 表单重置
+                    this.$refs[formName].resetFields();
+                },
+                // ============ 添加查询的函数 =================
+                search(){ // 搜索员工信息
+                    axios.post('/employee/list',this.employeeQuery).then((resp)=>{
+                        this.total = resp.data.total;
+                        this.employees = resp.data.list;
+                        // console.log(JSON.stringify(resp.data));
+                    })
                 },
                 findDept(){ // 查询部门
                     axios.get('/dept/findAll').then((resp)=>{
                         if(resp.data.code === 200){
                             this.depts = resp.data.data;
+                        }else{
+                            this.$message.error(resp.data.message);
+                        }
+                    })
+                },
+                findTitleCategory(){ // 查询职位
+                    axios.get('/title-category/findAll').then((resp)=>{
+                        if(resp.data.code === 200){
+                            this.titleCategories = resp.data.data;
+                        }else{
+                            this.$message.error(resp.data.message);
+                        }
+                    })
+                },
+                employeeStatu(){ // 查询职位状态
+                    axios.get('/employee-status/findAll').then((resp)=>{
+                        if(resp.data.code === 200){
+                            this.employeeStatus = resp.data.data;
                         }else{
                             this.$message.error(resp.data.message);
                         }

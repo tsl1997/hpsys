@@ -33,7 +33,7 @@ spring:
       connection-test-query: select 1
 
   jackson:
-    date-format: yyyy-MM-dd HH:mm:ss
+    date-format: yyyy-MM-dd
 
   # 配置视图前后缀
   mvc:
