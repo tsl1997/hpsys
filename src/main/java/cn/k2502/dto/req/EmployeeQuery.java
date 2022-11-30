@@ -8,10 +8,9 @@ import lombok.Data;
  * @date 2022年11月28日20:57:48
  **/
 @Data
-public class EmployeeQuery {
+public class EmployeeQuery extends BaseQuery {
 	private String empName;
 	private String deptId;
 	private String empNum;
-	private Integer page;
-	private Integer limit;
+
 }

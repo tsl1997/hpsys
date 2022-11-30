@@ -59,9 +59,9 @@
         </el-tree>
     </div>
     <script>
-        var vue = new Vue({
-            el:"#app",
-            data:{
+        let vue = new Vue({
+            el: "#app",
+            data: {
                 deptNodes: [],
                 defaultProps: {
                     children: 'children',
@@ -71,14 +71,14 @@
                 dialogVisible: false,
                 // 添加部门表单数据
                 deptForm: {
-                    id:null,
+                    id: null,
                     parentId: 0,
                     deptName: '',
                     deptNum: '',
                     managerId: 1
                 },
-                depts:[], // 所有的部门信息
-                employees:[],// 所有的员工
+                depts: [], // 所有的部门信息
+                employees: [],// 所有的员工
                 isDeptName: false,// 默认部门名称在数据库中不存在
                 // 表单校验
                 rules: {
@@ -91,50 +91,50 @@
                     ],
                 }
             },
-            methods:{
-                getTree(){ // 查询部门信息
-                    axios.get('/dept/findDeptList').then((resp)=>{
-                        if(resp.data.code===200){
+            methods: {
+                getTree() { // 查询部门信息
+                    axios.get('/dept/findDeptList').then((resp) => {
+                        if (resp.data.code === 200) {
                             this.deptNodes = resp.data.data;
-                        }else{
+                        } else {
                             this.$message.error(resp.data.message)
                         }
                     })
                 },
-                getDeptAll(){ // 查询部门
+                getDeptAll() { // 查询部门
                     axios.get('/dept/findAll').then((resp) => {
-                        if(resp.data.code===200){
+                        if (resp.data.code === 200) {
                             this.depts = resp.data.data;
-                        }else{
+                        } else {
                             this.$message.error(resp.data.message)
                         }
                     })
                 },
-                getEmployees(){ // 查询员工
+                getEmployees() { // 查询员工
                     axios.get('/employee/findAll').then((resp) => {
-                        if(resp.data.code===200){
+                        if (resp.data.code === 200) {
                             this.employees = resp.data.data;
-                        }else{
+                        } else {
                             this.$message.error(resp.data.message)
                         }
                     })
                 },
-                checkDeptName(){ // 查询部门名称是否在数据库中已经存在
-                    axios.get('/dept/checkDeptName?deptName='+this.deptForm.deptName).then((resp) => {
-                        if(resp.data.code===200){
+                checkDeptName() { // 查询部门名称是否在数据库中已经存在
+                    axios.get('/dept/checkDeptName?deptName=' + this.deptForm.deptName).then((resp) => {
+                        if (resp.data.code === 200) {
                             this.isDeptName = resp.data.data;
-                        }else{
+                        } else {
                             this.$message.error(resp.data.message)
                         }
                     })
                 },
-                treeAdd(node,data,store){ //树状图的增加
-                     // alert(JSON.stringify(data));
+                treeAdd(node, data, store) { //树状图的增加
+                    // alert(JSON.stringify(data));
                     this.deptForm.parentId = data.parentId;
                     this.deptForm.id = null;
                     this.dialogVisible = true;
                 },
-                treeUpdate(node,data,store){ //修改树状图
+                treeUpdate(node, data, store) { //修改树状图
                     // alert(JSON.stringify(data));
                     this.deptForm.id = data.id;
                     this.deptForm.parentId = data.parentId;
@@ -143,20 +143,20 @@
                     this.deptForm.deptNum = data.deptNum;
                     this.dialogVisible = true;
                 },
-                treeDelete(node,data,store){ //删除树状图
+                treeDelete(node, data, store) { //删除树状图
                     this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
                         confirmButtonText: '确定',
                         cancelButtonText: '取消',
                         type: 'warning'
                     }).then(() => {
-                       axios.get('/dept/delete?id='+data.id).then((resp) => {
-                           if(resp.data.code===200){
-                               this.$message.success(resp.data.message);
-                               // 刷新
-                               this.getTree();
-                               this.getDeptAll();
-                           }
-                       })
+                        axios.get('/dept/delete?id=' + data.id).then((resp) => {
+                            if (resp.data.code === 200) {
+                                this.$message.success(resp.data.message);
+                                // 刷新
+                                this.getTree();
+                                this.getDeptAll();
+                            }
+                        })
                     }).catch(() => {
                         this.$message({
                             type: 'info',
@@ -166,9 +166,9 @@
                 },
                 submitForm(formName) { // 添加、修改部门
                     this.checkDeptName(); // 添加前的验证姓名重复问题
-                    if(this.isDeptName){ // 表示数据库中部门名称已经存在
+                    if (this.isDeptName) { // 表示数据库中部门名称已经存在
                         this.$message.error("部门名称已经存在！！！");
-                    }else{
+                    } else {
                         let url = '/dept/save'; // 默认路径是添加
                         if (this.deptForm.id != null) { //表示修改
                             url = '/dept/update'; // 修改提交路径
@@ -193,17 +193,17 @@
                     }
                 },
 
-                renderContent(createEelement, { node, data, store }) {
+                renderContent(createEelement, {node, data, store}) {
                     return createEelement(
                         'span',
                         {
-                            style:{
-                                'flex':'1',
-                                'display':'flex',
-                                'align-items':'center',
-                                'justify-content':'space-between',
-                                'font-size':'14px',
-                                'padding-right':'8px'
+                            style: {
+                                'flex': '1',
+                                'display': 'flex',
+                                'align-items': 'center',
+                                'justify-content': 'space-between',
+                                'font-size': '14px',
+                                'padding-right': '8px'
                             }
                         },
                         [
@@ -211,7 +211,7 @@
                                 'span',
                                 {},
                                 [
-                                    createEelement('span',node.label)
+                                    createEelement('span', node.label)
                                 ]
                             ),
                             createEelement(
@@ -220,55 +220,55 @@
                                 [
                                     createEelement('el-button',
                                         {
-                                            style:{
-                                                'font-size':'12px'
+                                            style: {
+                                                'font-size': '12px'
                                             },
-                                            attrs:{
-                                                'type':'text'
+                                            attrs: {
+                                                'type': 'text'
                                             },
-                                            on:{
-                                                click:function (){
-                                                    vue.treeAdd(node,data,store);
+                                            on: {
+                                                click: function () {
+                                                    vue.treeAdd(node, data, store);
                                                 }
                                             },
-                                            domProps:{
-                                                innerHTML:'增加'
+                                            domProps: {
+                                                innerHTML: '增加'
                                             }
                                         }
                                     ),
                                     createEelement('el-button',
                                         {
-                                            style:{
-                                                'font-size':'12px'
+                                            style: {
+                                                'font-size': '12px'
                                             },
-                                            attrs:{
-                                                'type':'text'
+                                            attrs: {
+                                                'type': 'text'
                                             },
-                                            on:{
-                                                click:function (){
-                                                    vue.treeUpdate(node,data,store);
+                                            on: {
+                                                click: function () {
+                                                    vue.treeUpdate(node, data, store);
                                                 }
                                             },
-                                            domProps:{
-                                                innerHTML:'修改'
+                                            domProps: {
+                                                innerHTML: '修改'
                                             }
                                         }
                                     ),
                                     createEelement('el-button',
                                         {
-                                            style:{
-                                                'font-size':'12px'
+                                            style: {
+                                                'font-size': '12px'
                                             },
-                                            attrs:{
-                                                'type':'text'
+                                            attrs: {
+                                                'type': 'text'
                                             },
-                                            on:{
-                                                click:function (){
-                                                    vue.treeDelete(node,data,store);
+                                            on: {
+                                                click: function () {
+                                                    vue.treeDelete(node, data, store);
                                                 }
                                             },
-                                            domProps:{
-                                                innerHTML:'删除'
+                                            domProps: {
+                                                innerHTML: '删除'
                                             }
                                         }
                                     )
@@ -278,7 +278,7 @@
                     )
                 }
             },
-            created(){ // 实例创建完成
+            created() { // 实例创建完成
                 this.getTree();
                 this.getDeptAll();
                 this.getEmployees();

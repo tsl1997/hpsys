@@ -2,16 +2,15 @@ package cn.k2502.controller;
 
 
 import cn.k2502.dto.req.AccountParams;
+import cn.k2502.dto.req.AccountRoleQuery;
 import cn.k2502.dto.resp.RespBean;
 import cn.k2502.pojo.Account;
 import cn.k2502.service.IAccountService;
 import cn.k2502.utils.SpringSecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
 
 /**
  * <p>
@@ -54,6 +53,16 @@ public class AccountController {
 
 		accountService.updatePassword(accountParams);
 		return RespBean.success("修改成功");
+	}
+
+	/**
+	 * 查询用户所具备的角色
+	 * @param accountRoleQuery 查询条件类
+	 * @return 结果集合
+	 */
+	@PostMapping("/accountRoleList")
+	public Map<String,Object> accountRoleList(@RequestBody AccountRoleQuery accountRoleQuery){
+		return accountService.accountRoleList(accountRoleQuery);
 	}
 
 }

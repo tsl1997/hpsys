@@ -1,17 +1,24 @@
 package cn.k2502.service.impl;
 
 import cn.k2502.dto.req.AccountParams;
+import cn.k2502.dto.req.AccountRoleQuery;
+import cn.k2502.dto.resp.AccountRoleDto;
 import cn.k2502.pojo.Account;
 import cn.k2502.mapper.AccountMapper;
 import cn.k2502.service.IAccountService;
 import cn.k2502.utils.AssertUtil;
 import cn.k2502.utils.SpringSecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p>
@@ -74,5 +81,20 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 		// 5：添加到数据库
 		int count = this.baseMapper.updateById(account);
 		AssertUtil.isTrue(count != 1,"修改密码失败");
+	}
+
+	/**
+	 * 查询用户所具有的角色
+	 * @param accountRoleQuery 查询条件
+	 * @return 角色集合Map
+	 */
+	@Override
+	public Map<String, Object> accountRoleList(AccountRoleQuery accountRoleQuery) {
+		IPage<AccountRoleDto> page = new Page<>(accountRoleQuery.getPage(), accountRoleQuery.getLimit());
+		page = this.baseMapper.accountRoleList(page, accountRoleQuery);
+		Map<String, Object> map = new HashMap<>();
+		map.put("total",page.getTotal());
+		map.put("list",page.getRecords());
+		return map;
 	}
 }
