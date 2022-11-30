@@ -30,7 +30,9 @@
                  LEFT JOIN `t_account` a ON ar.`account_id` = a.`id`
                  LEFT JOIN `t_employee` e ON a.`emp_id` = e.`id`
         <where>
+        <if test="null != accountRoleQuery.roleId">
             ar.`role_id` = #{accountRoleQuery.roleId}
+        </if>
         <if test="null != accountRoleQuery.empName and accountRoleQuery.empName != ''">
             AND e.`emp_name` LIKE concat('%',#{accountRoleQuery.empName},'%')
         </if>

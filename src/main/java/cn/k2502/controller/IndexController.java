@@ -36,4 +36,9 @@ public class IndexController {
 	public String employee(){
 		return "employee";
 	}
+
+	@GetMapping("/accountRole")
+	public String accountRole(){
+		return "accountRole";
+	}
 }

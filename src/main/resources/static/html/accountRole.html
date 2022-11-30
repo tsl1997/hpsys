@@ -10,31 +10,60 @@
 </head>
 <body>
     <div id="app">
-        <el-table :data="tableData" border style="width: 100%">
+        <el-table :data="accountRoleList" border style="width: 100%">
             <el-table-column prop="aid" label="账户" width="150"></el-table-column>
-            <el-table-column
-                    fixed="right"
-                    label="操作"
-                    width="100">
+            <el-table-column prop="empNum" label="员工编号" width="150"></el-table-column>
+            <el-table-column prop="empName" label="姓名" width="150"></el-table-column>
+            <el-table-column label="操作" width="100">
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button @click="handleClick(scope.row)" type="text" size="small">取消分配</el-button>
                 </template>
             </el-table-column>
         </el-table>
+        <el-pagination background
+                       @size-change="handleSizeChange"
+                       @current-change="handleCurrentChange"
+                       :current-page="accountRoleQuery.page"
+                       :page-sizes="[2, 15, 20, 25]"
+                       :page-size="accountRoleQuery.limit"
+                       layout="total, sizes, prev, pager, next, jumper"
+                       :total="total">
+        </el-pagination>
 
     </div>
     <script>
         new Vue({
             el: "#app",
             data: {
-
+                accountRoleList:[],//员工数据
+                accountRoleQuery:{ // 查询条件
+                    page: 1,
+                    limit: 2
+                },
+                total:10,
             },
             methods: {
-
+                search(){ // 搜索员工角色信息
+                    axios.post('/account/accountRoleList',this.accountRoleQuery).then((resp)=>{
+                        this.total = resp.data.total;
+                        this.accountRoleList = resp.data.list;
+                        // console.log(JSON.stringify(resp.data));
+                    })
+                },
+                // ============ 分页相关的函数 =================
+                handleSizeChange(val){ // 当页大小修改时触发此函数
+                    // val 回调参数，显示获取的页大小
+                    this.accountRoleQuery.limit = val;
+                    this.search();
+                },
+                handleCurrentChange(val) { // 当页码修改时触发此函数
+                    // val 回调参数，显示当前页码
+                    this.accountRoleQuery.page = val;
+                    this.search();
+                },
             },
             created(){
-
+                this.search();
             }
         })
     </script>
