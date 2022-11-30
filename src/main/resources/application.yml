@@ -41,6 +41,28 @@ spring:
       suffix: .html
       prefix: /html/
 
+  activiti:
+    # 数据库更新策略   true：默认值（activiti会对数据库中的所有表进行更新操作，如果不存在，则自动创建-- 开发模式下）
+    #                false:在activiti启动的时候哦，会比对数据库中保存的版本，如果没有表或者版本不匹配，就会抛出异常 -- 生产环境下
+    #               create_drop:在启动的时候创建表，在关闭的时候删除表（单元测试）
+    #              drop-create： 启动的时候删除来原来的旧表，然后在创建新的表
+    database-schema-update: true
+    # false：默认值，不生成历史信息表   true：开启历史表
+    db-history-used: true
+    # 历史记录等级： none、activity、audit、full
+    # none：不保存任何的历史数据，因此：在流程执行过程中，这种是效率最高的
+    # activity： 级别高于none，保存流程实例与流程行为，其数据不保存
+    # audit：除了activity会保存的数据外，还会保存全部的流程任务及其属性，（audit是默认值）
+    # full： 保存历史信息的最高级别，除了保存上面的audit级别的数据外，还会报错其它全部流程相关的细节数据，包括一些流程参数
+    history-level: full
+    # 自动检查、部署流程定义文件
+    check-process-definitions: false
+    # 是指activiti在流程引擎启动就激活AsyncExcutor   true：开启（默认）  false：关闭
+    async-executor-activate: true
+    # 关闭springAtuoDeplyment
+    deployment-mode: never-fail
+
+
 # MyBatisPlus配置
 mybatis-plus:
   # mapper 映射文件路径
@@ -55,7 +77,6 @@ mybatis-plus:
 logging:
   level:
     cn.k2502.mapper: debug
-
 
 
 
