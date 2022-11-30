@@ -29,8 +29,8 @@
                     label="操作"
                     width="100">
                 <template slot-scope="scope">
-                    <el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
-                    <el-button type="text" size="small">编辑</el-button>
+                    <el-button @click="findOne(scope.row.id)" type="text" size="small">修改</el-button>
+                    <el-button @click="deleteEmp(scope.row.id)" type="text" size="small">删除</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -145,6 +145,7 @@
                 total: 0,// 总信息条件
                 dialogVisible: false,
                 empForm: { // 表单对象
+                    id: null,
                     empName: '',
                     gender: '男',
                     birthday: '',
@@ -212,12 +213,19 @@
                 submitForm(formName) { // 表单提交的函数
                     this.$refs[formName].validate((valid) => {
                         if (valid) {
-                            axios.post('/employee/add',this.empForm).then((resp)=>{
+                            let url = '/employee/add'; // 默认添加
+                            // 判断是修改还是添加
+                            if(this.empForm.id !=null ){
+                                url = '/employee/update'; // 此处修改
+                            }
+                            axios.post(url,this.empForm).then((resp)=>{
                                 if(resp.data.code === 200){
                                     // 1：重新查询 2：情况内容 3：关闭对话框
                                     this.search();
                                     this.resetForm('empForm');
                                     this.dialogVisible = false;
+                                    // 4：因为修改和添加公用此函数，所以设置id为null，避免下次添加异常
+                                    this.empForm.id = null;
                                 }
                             })
                         } else {
@@ -274,6 +282,37 @@
                     // val 回调参数，显示当前页码
                     this.employeeQuery.page = val;
                     this.search();
+                },
+                // ============ 修改查询的函数 =================
+                findOne(id) { // 根据id查询员工
+                    axios.get('/employee/findOne?id='+id).then((resp)=>{
+                        if(resp.data.code === 200){
+                            this.empForm = resp.data.data;
+                            this.dialogVisible = true;
+                        }else {
+                            this.$message.error(resp.data.message);
+                        }
+                    })
+                },
+                deleteEmp(id) { // 根据id 删除员工
+                    this.$confirm('此操作将永久删除该员工, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.get('/employee/delete?id='+id).then((resp) => {
+                            if(resp.data.code===200){
+                                this.$message.success(resp.data.message);
+                                // 刷新
+                                this.search();
+                            }
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
                 }
             },
             created(){

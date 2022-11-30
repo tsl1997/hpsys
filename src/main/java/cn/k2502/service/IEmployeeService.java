@@ -35,4 +35,25 @@ public interface IEmployeeService extends IService<Employee> {
 	 * @return 添加结果
 	 */
 	RespBean addEmployee(Employee employee);
+
+	/**
+	 * 查询员工信息
+	 * @param id 员工id
+	 * @return 员工信息
+	 */
+	RespBean findOne(Integer id);
+
+	/**
+	 * 修改员工信息
+	 * @param employee 员工对象
+	 * @return 结果F/T
+	 */
+	RespBean updateEmployee(Employee employee);
+
+	/**
+	 * 根据员工id删除对应员工
+	 * @param id 员工id
+	 * @return 结果
+	 */
+	RespBean delete(Integer id);
 }

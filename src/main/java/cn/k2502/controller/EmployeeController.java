@@ -36,7 +36,7 @@ public class EmployeeController {
 
 	/**
 	 * 员工信息查询
-	 * @param employeeQuery 擦护心条件类
+	 * @param employeeQuery 查询条件类
 	 * @return 员工集合
 	 */
 	@PostMapping("/list")
@@ -52,6 +52,36 @@ public class EmployeeController {
 	@PostMapping("/add")
 	public RespBean add(@RequestBody Employee employee){
 		return employeeService.addEmployee(employee);
+	}
+
+	/**
+	 * 根据id查询员工
+	 * @param id 员工id
+	 * @return 员工对象
+	 */
+	@GetMapping("/findOne")
+	public RespBean findOne(@RequestParam Integer id){
+		return employeeService.findOne(id);
+	}
+
+	/**
+	 * 修改员工信息
+	 * @param employee 员工对象
+	 * @return 修改结果
+	 */
+	@PostMapping("/update")
+	public RespBean update(@RequestBody Employee employee){
+		return employeeService.updateEmployee(employee);
+	}
+
+	/**
+	 * 根据id 删除员工
+	 * @param id 员工id
+	 * @return 删除结果
+	 */
+	@GetMapping("/delete")
+	public RespBean delete(@RequestParam Integer id){
+		return employeeService.delete(id);
 	}
 }
 

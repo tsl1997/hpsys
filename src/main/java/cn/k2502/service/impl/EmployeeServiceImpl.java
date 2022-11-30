@@ -68,4 +68,52 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 			return RespBean.error("添加员工失败");
 		}
 	}
+
+	/**
+	 * 根据id查询员工信息
+	 * @param id 员工id
+	 * @return 员工对象
+	 */
+	@Override
+	public RespBean findOne(Integer id) {
+		try {
+			Employee employee = this.baseMapper.selectById(id);
+			return RespBean.success("查询员工信息成功",employee);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RespBean.error("查询员工信息失败");
+		}
+	}
+
+	/**
+	 * 修改员工信息
+	 * @param employee 员工对象
+	 * @return 修改结果
+	 */
+	@Override
+	public RespBean updateEmployee(Employee employee) {
+		try {
+			this.baseMapper.updateById(employee);
+			return RespBean.success("修改员工成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RespBean.error("修改员工失败");
+		}
+	}
+
+	/**
+	 * 根据id删除员工
+	 * @param id 员工id
+	 * @return 结果
+	 */
+	@Override
+	public RespBean delete(Integer id) {
+		try {
+			this.baseMapper.deleteById(id);
+			return RespBean.success("删除员工成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return RespBean.error("删除员工失败");
+		}
+	}
 }
