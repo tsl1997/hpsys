@@ -1,5 +1,6 @@
 package cn.k2502.pojo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -57,10 +58,14 @@ public class Account implements Serializable , UserDetails {
     @ApiModelProperty(value = "用户照片")
     private String photo;
 
+    @ApiModelProperty(value = "权限列表")
+    @TableField(exist = false)
+    private Collection<? extends GrantedAuthority> authorities;// 用户权限
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.authorities;
     }
 
     // 获取用户名

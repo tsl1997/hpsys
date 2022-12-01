@@ -6,6 +6,7 @@ import cn.k2502.dto.resp.RespBean;
 import cn.k2502.pojo.Employee;
 import cn.k2502.service.IEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -30,6 +31,7 @@ public class EmployeeController {
 	 * @return 员工列表
 	 */
 	@GetMapping("/findAll")
+	@PreAuthorize("hasAuthority('6010')")
 	public RespBean findAll() {
 		return employeeService.findAll();
 	}

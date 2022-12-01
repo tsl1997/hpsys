@@ -4,13 +4,16 @@ import cn.k2502.config.security.handler.HpSysAuthenticationFailedHandler;
 import cn.k2502.config.security.handler.HpSysAuthenticationSuccessHandler;
 import cn.k2502.pojo.Account;
 import cn.k2502.service.IAccountService;
+import cn.k2502.service.IPermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +24,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 
 import javax.annotation.Resource;
 import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * SpringSecurity的配置
@@ -28,6 +32,7 @@ import javax.sql.DataSource;
  * @date 2022年11月21日18:14:50
  **/
 @SpringBootConfiguration
+@EnableGlobalMethodSecurity(prePostEnabled = true) // 启用权限注解，并且用注解标注资源
 public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 	/**
 	 * 静态资源放行
@@ -89,6 +94,8 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private IAccountService accountService;
+	@Autowired
+	private IPermissionService permissionService;
 	/**
 	 * 实现登录
 	 */
@@ -100,6 +107,13 @@ public class SecurityConfig  extends WebSecurityConfigurerAdapter {
 				// 根据用户名查询用户对象
 				// 密码校验交给SpringSecurity
 				Account account = accountService.login(userName);
+				if(account == null){ // 用户名不存在
+					throw new UsernameNotFoundException("用户名不存在");
+				}
+				// 用户名存在，就查询权限列表
+				List<String> authorities = permissionService.findAuthorityByUsername(userName);
+				// 根据用户查询扮演角色 --- > 权限 (将角色)
+				account.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(",",authorities)));
 				return account;
 			}
 		};

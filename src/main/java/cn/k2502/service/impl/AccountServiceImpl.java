@@ -7,6 +7,7 @@ import cn.k2502.dto.resp.RespBean;
 import cn.k2502.pojo.Account;
 import cn.k2502.mapper.AccountMapper;
 import cn.k2502.service.IAccountService;
+import cn.k2502.service.IPermissionService;
 import cn.k2502.utils.AssertUtil;
 import cn.k2502.utils.SpringSecurityUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -15,6 +16,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,10 +35,12 @@ import java.util.Map;
 @Service
 public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> implements IAccountService {
 
+
 	@Override
 	public Account login(String username) {
 		// 查单条
-		return this.baseMapper.selectOne(new QueryWrapper<Account>().eq("user_name",username));
+		Account account = this.baseMapper.selectOne(new QueryWrapper<Account>().eq("user_name", username));
+		return account;
 	}
 
 	@Autowired
