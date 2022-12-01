@@ -3,6 +3,7 @@ package cn.k2502.service.impl;
 import cn.k2502.dto.req.AccountParams;
 import cn.k2502.dto.req.AccountRoleQuery;
 import cn.k2502.dto.resp.AccountRoleDto;
+import cn.k2502.dto.resp.RespBean;
 import cn.k2502.pojo.Account;
 import cn.k2502.mapper.AccountMapper;
 import cn.k2502.service.IAccountService;
@@ -18,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -96,5 +98,21 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 		map.put("total",page.getTotal());
 		map.put("list",page.getRecords());
 		return map;
+	}
+
+	/**
+	 * 根据用户id 查询角色
+	 * @param id 用户id
+	 * @return 角色列表
+	 */
+	@Override
+	public RespBean getRolesByAccountId(Integer id) {
+		try {
+			List<Integer> list = this.baseMapper.getRolesByAccountId(id);
+			return RespBean.success("根据账号查询角色列表成功",list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return  RespBean.error("根据账号查询角色列表失败");
+		}
 	}
 }

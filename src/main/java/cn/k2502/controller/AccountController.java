@@ -65,5 +65,14 @@ public class AccountController {
 		return accountService.accountRoleList(accountRoleQuery);
 	}
 
+	/**
+	 * 根据账号id 查询角色列表
+	 * @param id 账号id
+	 * @return 角色列表
+	 */
+	@GetMapping("/getRolesByAccountId")
+	public RespBean getRolesByAccountId(@RequestParam Integer id){
+		return accountService.getRolesByAccountId(id);
+	}
 }
 

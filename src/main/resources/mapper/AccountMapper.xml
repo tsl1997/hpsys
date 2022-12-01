@@ -20,7 +20,7 @@
     </sql>
 
     <select id="accountRoleList" resultType="cn.k2502.dto.resp.AccountRoleDto">
-        SELECT
+        SELECT distinct
             ar.`account_id` AS aid,
             a.`user_name`,
             e.`emp_num`,
@@ -40,6 +40,15 @@
             AND e.`emp_num` = #{accountRoleQuery.empNum}
         </if>
         </where>
+    </select>
+
+    <select id="getRolesByAccountId" parameterType="int" resultType="int">
+        SELECT
+            ar.`role_id`
+        FROM `t_account` a
+                 LEFT JOIN `t_account_role` ar
+                           ON a.`id` = ar.`account_id`
+        WHERE a.`id` = #{aid}
     </select>
 
 </mapper>

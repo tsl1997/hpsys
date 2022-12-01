@@ -9,6 +9,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * <p>
  *  Mapper 接口
@@ -19,4 +21,11 @@ import org.apache.ibatis.annotations.Param;
  */
 public interface AccountMapper extends BaseMapper<Account> {
 	IPage<AccountRoleDto> accountRoleList(IPage page, @Param("accountRoleQuery")AccountRoleQuery accountRoleQuery);
+
+	/**
+	 * 根据账号的id 查询该账号所拥有的角色列表
+	 * @param id 账号id
+	 * @return 角色列表
+	 */
+	List<Integer> getRolesByAccountId(Integer id);
 }

@@ -2,6 +2,7 @@ package cn.k2502.service;
 
 import cn.k2502.dto.req.AccountParams;
 import cn.k2502.dto.req.AccountRoleQuery;
+import cn.k2502.dto.resp.RespBean;
 import cn.k2502.pojo.Account;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -44,4 +45,11 @@ public interface IAccountService extends IService<Account> {
 	 * @return 用户角色集合
 	 */
 	Map<String,Object> accountRoleList(AccountRoleQuery accountRoleQuery);
+
+	/**
+	 * 根据用户id 查询角色
+	 * @param id 用户id
+	 * @return 角色列表
+	 */
+	RespBean getRolesByAccountId(Integer id);
 }
